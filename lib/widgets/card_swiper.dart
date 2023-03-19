@@ -8,11 +8,12 @@ class CardSwiper extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: size.height * 0.5,
       //color: Colors.red, //se coloco inicialmente este color para configurar el widget
       child: Swiper(
+        //reemplace un container por un sizebox, por que flutter se paso de inteligente y me lo sugirio
         itemCount: 10,
         layout: SwiperLayout.STACK,
         itemWidth: size.width * 0.6,
