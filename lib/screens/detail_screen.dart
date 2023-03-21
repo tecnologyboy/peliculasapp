@@ -5,9 +5,14 @@ class DetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    //TODO: Cambiar luego por una instancia de movie
+
+    final String movie =
+        ModalRoute.of(context)?.settings.arguments.toString() ?? 'No-Movie';
+
+    return Scaffold(
       body: Center(
-        child: Text('Detail Screen'),
+        child: Text(movie),
       ),
     );
   }
