@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:peliculas/widgets/casting_cards.dart';
 
 class DetailScreen extends StatelessWidget {
   const DetailScreen({super.key});
@@ -17,6 +18,10 @@ class DetailScreen extends StatelessWidget {
         SliverList(
           delegate: SliverChildListDelegate.fixed([
             _PosterAndtitle(),
+            _OverView(),
+            _OverView(),
+            _OverView(),
+            CastingCards(),
           ]),
         )
       ],
@@ -41,6 +46,7 @@ class _CustomAppbar extends StatelessWidget {
           color: Colors.black12,
           width: double.infinity,
           alignment: Alignment.bottomCenter,
+          padding: const EdgeInsets.only(bottom: 5),
           child: const Text('Movie.tilte'),
         ),
         background: const FadeInImage(
@@ -110,6 +116,21 @@ class _PosterAndtitle extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+}
+
+class _OverView extends StatelessWidget {
+  const _OverView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+      child: Text(
+          'Commodo qui est occaecat mollit magna minim est aute aliquip ut in. Magna in ipsum non fugiat eu deserunt ex dolor adipisicing reprehenderit officia fugiat minim nulla. Aute adipisicing non aute dolor cillum aliquip Lorem Lorem. Excepteur est nostrud proident nulla. Deserunt ipsum nisi eu magna aliquip aliquip minim qui ad veniam commodo.',
+          textAlign: TextAlign.justify,
+          style: Theme.of(context).textTheme.bodySmall),
     );
   }
 }
