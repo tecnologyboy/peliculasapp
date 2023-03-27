@@ -1,10 +1,6 @@
-import 'dart:convert';
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:peliculas/models/movie.dart';
-import 'package:peliculas/models/now_playing_response.dart';
+import 'package:peliculas/models/models.dart';
 
 class MoviesProvider extends ChangeNotifier {
   // si no se extiende de la clase Change Nofitiers no sera admitido como un provider valido
@@ -14,11 +10,13 @@ class MoviesProvider extends ChangeNotifier {
   final String _apiKey = '242ff1e9ef9237a371520c33ca9f64aa';
 
   List<Movie> onDisplayMovies = [];
+  List<Movie> popularMovies = [];
 
   MoviesProvider() {
     print('Movies Provider Inicializado');
 
     getOnDisplayMovies();
+    getPopularMovies();
   }
 
   getOnDisplayMovies() async {
@@ -29,13 +27,20 @@ class MoviesProvider extends ChangeNotifier {
 
     final nowPlayingResponse = NowPlayingResponse.fromRawJson(response.body);
 
-    // final Map<String, dynamic> DecodeData = json.decode(response.body);
-
-    // if (response.statusCode != 200) return print('Error');
-
-    //print(nowPlayingResponse.results[1].title);
-
     this.onDisplayMovies = nowPlayingResponse.results;
+
+    notifyListeners(); //Este metodo, hace que todos los widgets que estan utilizando los datos que tienen cambios, se redibujen automaticamente.
+  }
+
+  getPopularMovies() async {
+    var url = Uri.https(_urlBase, '3/movie/popular',
+        {'api_key': _apiKey, 'language': _language, 'page': '1'});
+
+    final response = await http.get(url);
+
+    final popularResponse = PopularResponse.fromRawJson(response.body);
+
+    this.popularMovies = [...popularMovies, ...popularResponse.results];
 
     notifyListeners(); //Este metodo, hace que todos los widgets que estan utilizando los datos que tienen cambios, se redibujen automaticamente.
   }
