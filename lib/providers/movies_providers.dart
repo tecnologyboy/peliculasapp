@@ -12,6 +12,17 @@ class MoviesProvider extends ChangeNotifier {
   List<Movie> onDisplayMovies = [];
   List<Movie> popularMovies = [];
 
+  int _popularPage = 0;
+
+  Future<String> _getJsonDate(String endpoint, [int page = 1]) async {
+    var url = Uri.https(_urlBase, endpoint,
+        {'api_key': _apiKey, 'language': _language, '$page': '1'});
+
+    final response = await http.get(url);
+
+    return response.body;
+  }
+
   MoviesProvider() {
     print('Movies Provider Inicializado');
 
@@ -20,27 +31,23 @@ class MoviesProvider extends ChangeNotifier {
   }
 
   getOnDisplayMovies() async {
-    var url = Uri.https(_urlBase, '3/movie/now_playing',
-        {'api_key': _apiKey, 'language': _language, 'page': '1'});
+    final jsonData = await _getJsonDate('/3/movie/now_playing');
 
-    final response = await http.get(url);
+    final nowPlayingResponse = NowPlayingResponse.fromRawJson(jsonData);
 
-    final nowPlayingResponse = NowPlayingResponse.fromRawJson(response.body);
-
-    this.onDisplayMovies = nowPlayingResponse.results;
+    onDisplayMovies = nowPlayingResponse.results;
 
     notifyListeners(); //Este metodo, hace que todos los widgets que estan utilizando los datos que tienen cambios, se redibujen automaticamente.
   }
 
   getPopularMovies() async {
-    var url = Uri.https(_urlBase, '3/movie/popular',
-        {'api_key': _apiKey, 'language': _language, 'page': '1'});
+    _popularPage++;
 
-    final response = await http.get(url);
+    final jsonData = await _getJsonDate('3/movie/popular', _popularPage);
 
-    final popularResponse = PopularResponse.fromRawJson(response.body);
+    final popularResponse = PopularResponse.fromRawJson(jsonData);
 
-    this.popularMovies = [...popularMovies, ...popularResponse.results];
+    popularMovies = [...popularMovies, ...popularResponse.results];
 
     notifyListeners(); //Este metodo, hace que todos los widgets que estan utilizando los datos que tienen cambios, se redibujen automaticamente.
   }
