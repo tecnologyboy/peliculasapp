@@ -12,11 +12,13 @@ class MoviesProvider extends ChangeNotifier {
   List<Movie> onDisplayMovies = [];
   List<Movie> popularMovies = [];
 
+  Map<int, List<Cast>> movieCast = {};
+
   int _popularPage = 0;
 
   Future<String> _getJsonDate(String endpoint, [int page = 1]) async {
     var url = Uri.https(_urlBase, endpoint,
-        {'api_key': _apiKey, 'language': _language, '$page': '1'});
+        {'api_key': _apiKey, 'language': _language, 'page': '$page'});
 
     final response = await http.get(url);
 
@@ -50,5 +52,17 @@ class MoviesProvider extends ChangeNotifier {
     popularMovies = [...popularMovies, ...popularResponse.results];
 
     notifyListeners(); //Este metodo, hace que todos los widgets que estan utilizando los datos que tienen cambios, se redibujen automaticamente.
+  }
+
+  Future<List<Cast>> getMovieCast(int movieId) async {
+    //TODO: Revisar el map
+
+    final jsonData = await _getJsonDate('/3/movie/$movieId/credits');
+
+    final creditsResponse = CreditsResponse.fromJson(jsonData);
+
+    movieCast[movieId] = creditsResponse.cast;
+
+    return creditsResponse.cast;
   }
 }

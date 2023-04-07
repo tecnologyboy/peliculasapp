@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:peliculas/models/models.dart';
 import 'package:peliculas/widgets/casting_cards.dart';
@@ -9,9 +7,7 @@ class DetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //TODO: Cambiar luego por una instancia de movie
-
-    final Movie movie = ModalRoute.of(context)?.settings.arguments as Movie;
+    final Movie movie = ModalRoute.of(context)!.settings.arguments as Movie;
 
     return Scaffold(
         body: CustomScrollView(
@@ -27,7 +23,9 @@ class DetailScreen extends StatelessWidget {
             _OverView(movie),
             _OverView(movie),
             _OverView(movie),
-            //CastingCards(movie),
+            CastingCards(
+              movieId: movie.id,
+            ),
           ]),
         )
       ],
