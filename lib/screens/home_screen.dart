@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:peliculas/providers/movies_providers.dart';
-import 'package:peliculas/widgets/widgets.dart';
 import 'package:provider/provider.dart';
+
+import 'package:peliculas/Search/search_Delegate.dart';
+
+import 'package:peliculas/providers/movies_providers.dart';
+
+import 'package:peliculas/widgets/widgets.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -13,6 +17,14 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Peliculas en Cine'),
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search_outlined),
+            onPressed: () =>
+                showSearch(context: context, delegate: MovieSearchDelegate()),
+          )
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
