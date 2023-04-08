@@ -29,8 +29,8 @@ class CastingCards extends StatelessWidget {
           height: 180,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: 10,
-            itemBuilder: (_, int index) => const _CastCard(),
+            itemCount: cast.length,
+            itemBuilder: (_, int index) => _CastCard(cast[index]),
           ),
         );
       },
@@ -39,7 +39,9 @@ class CastingCards extends StatelessWidget {
 }
 
 class _CastCard extends StatelessWidget {
-  const _CastCard({super.key});
+  final Cast actor;
+
+  const _CastCard(this.actor);
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +53,9 @@ class _CastCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(20),
-            child: const FadeInImage(
-              placeholder: AssetImage('assets/no-image.jpg'),
-              image: NetworkImage(
-                  'https://www.mountaineers.org/images/placeholder-images/placeholder-300-x-400'),
+            child: FadeInImage(
+              placeholder: const AssetImage('assets/no-image.jpg'),
+              image: NetworkImage(actor.fullProfilePath),
               height: 140,
               width: 100,
               fit: BoxFit.cover,
@@ -63,8 +64,8 @@ class _CastCard extends StatelessWidget {
           const SizedBox(
             height: 5,
           ),
-          const Text(
-            'actor.name. y otras vainas',
+          Text(
+            actor.name,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
