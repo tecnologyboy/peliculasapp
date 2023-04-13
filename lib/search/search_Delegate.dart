@@ -52,6 +52,7 @@ class MovieSearchDelegate extends SearchDelegate {
       return _emptyList();
     }
 
+    print('Peticion http');
     final moviesProvider = Provider.of<MoviesProvider>(context, listen: false);
 
     return FutureBuilder(

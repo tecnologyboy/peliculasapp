@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:peliculas/helpers/debouncer.dart';
 import 'package:peliculas/models/models.dart';
 
 class MoviesProvider extends ChangeNotifier {
@@ -15,6 +18,12 @@ class MoviesProvider extends ChangeNotifier {
   Map<int, List<Cast>> movieCast = {};
 
   int _popularPage = 0;
+
+  final debouncer = Debouncer(duration: const Duration(milliseconds: 500));
+
+  final StreamController<List<Movie>> _suggetsionStreamController =
+      StreamController.broadcast();
+  Stream<List<Movie>> get suggetionStream => _suggetsionStreamController.stream;
 
   Future<String> _getJsonDate(String endpoint, [int page = 1]) async {
     final url = Uri.https(_urlBase, endpoint,
@@ -76,4 +85,6 @@ class MoviesProvider extends ChangeNotifier {
 
     return searchResponse.results;
   }
+
+  void getSuggetionQuery(String query) {}
 }
