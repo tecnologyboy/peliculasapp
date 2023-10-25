@@ -21,9 +21,9 @@ class MoviesProvider extends ChangeNotifier {
 
   final debouncer = Debouncer(duration: const Duration(milliseconds: 500));
 
-  final StreamController<List<Movie>> _suggetsionStreamController =
+  final StreamController<List<Movie>> _suggestionStreamContoller =
       StreamController.broadcast();
-  Stream<List<Movie>> get suggetionStream => _suggetsionStreamController.stream;
+  Stream<List<Movie>> get suggestionStream => _suggestionStreamContoller.stream;
 
   Future<String> _getJsonDate(String endpoint, [int page = 1]) async {
     final url = Uri.https(_urlBase, endpoint,
@@ -75,7 +75,7 @@ class MoviesProvider extends ChangeNotifier {
     return creditsResponse.cast;
   }
 
-  Future<List<Movie>> seachMovies(String query) async {
+  Future<List<Movie>> searchMovies(String query) async {
     final url = Uri.https(_urlBase, '3/search/movie',
         {'api_key': _apiKey, 'language': _language, 'query': query});
 
@@ -86,5 +86,19 @@ class MoviesProvider extends ChangeNotifier {
     return searchResponse.results;
   }
 
-  void getSuggetionQuery(String query) {}
+  void getSuggestionsByQuery(String searchTerm) {
+    debouncer.value = '';
+    debouncer.onValue = (value) async {
+      // print('Tenemos valor a buscar: $value');
+      final results = await searchMovies(value);
+      _suggestionStreamContoller.add(results);
+    };
+
+    final timer = Timer.periodic(const Duration(milliseconds: 300), (_) {
+      debouncer.value = searchTerm;
+    });
+
+    Future.delayed(const Duration(milliseconds: 301))
+        .then((_) => timer.cancel());
+  }
 }
